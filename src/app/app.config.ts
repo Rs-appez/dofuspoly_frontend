@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: () => {
-        inject({ mode: isDevMode() ? 'development' : 'development' });
+        inject({ mode: isDevMode() ? 'development' : 'production' });
       },
     },
   ],
