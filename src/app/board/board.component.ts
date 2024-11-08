@@ -9,11 +9,11 @@ import { Component } from '@angular/core';
   styleUrl: './board.component.css',
 })
 export class BoardComponent {
-  diceRollsCount = 0;
-  animationState = 'start';
+  diceRollsCount = signal(0); // Initialisation d'un signal pour le compteur
+  animationState = signal('start'); // Initialisation d'un signal pour l'état de l'animation
 
   rollDice() {
-    this.diceRollsCount = Math.floor(Math.random() * 6) + 1;
-    console.log('Dice roll:', this.diceRollsCount);
+    this.diceRollsCount.set(Math.floor(Math.random() * 6) + 1);
+    console.log('Dice roll:', this.diceRollsCount());
   }
 }
