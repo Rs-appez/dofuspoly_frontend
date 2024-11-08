@@ -10,8 +10,15 @@ import { PlayerService } from '../services/player.service';
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
 })
-export class BoardComponent implements OnInit {
-  diceRollsCount = 0;
+export class BoardComponent {
+  diceRollsCount = signal(0); // Initialisation d'un signal pour le compteur
+  animationState = signal('start'); // Initialisation d'un signal pour l'état de l'animation
+
+  rollDice() {
+    this.diceRollsCount.set(Math.floor(Math.random() * 6) + 1);
+    console.log('Dice roll:', this.diceRollsCount());
+    
+  }
 
   players: Player[] = [{ name: 'test', position: 0, money: 0, inJail: false, jailTurns: 0, cards: [] }];
 
@@ -35,12 +42,5 @@ export class BoardComponent implements OnInit {
       this.rollDice();
       this.cdr.detectChanges();
     });
-  }
-
-  rollDice() {
-    this.diceRollsCount = Math.floor(Math.random() * 6) + 1;
-    console.log('Dice roll:', this.diceRollsCount);
-    console.log('Players:', this.players);
-    this.cdr.detectChanges();
-  }
+  }  
 }
