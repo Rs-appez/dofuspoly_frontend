@@ -13,9 +13,9 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    // provideHttpClient(
-    //   withFetch()
-    // ),
+    provideHttpClient(
+      withFetch()
+    ),
     {
       provide: APP_INITIALIZER,
       useFactory: () => {
