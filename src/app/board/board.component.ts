@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject , signal} from '@angular/core';
+import { Component, inject , signal} from '@angular/core';
 import { Player } from '../interfaces/player';
 import { PlayerService } from '../services/player.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -12,23 +13,24 @@ import { PlayerService } from '../services/player.service';
 })
 export class BoardComponent  {
 
-  diceRollsCount = signal(0); // Initialisation d'un signal pour le compteur
+  diceRollsCount = signal<number>(0); // Initialisation d'un signal pour le compteur
+  players  = signal<Player[]>([]); // Initialisation d'un signal pour les joueurs
 
-  players: Player[] = [];
+  playersObservable: Observable<Player[]>;
 
   playerService: PlayerService = inject(PlayerService);
-  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   constructor() {
+    this.playersObservable = this.playerService.getPlayers();
     this.getPlayers();
   }
 
-
-
-  getPlayers() {
-    this.playerService.getPlayers().subscribe((players: Player[]) => {
-      this.players = players;
-    });
+  getPlayers()  {
+    this.playersObservable.subscribe(
+      (players : Player[]) => {
+        this.players.set(players);
+      }
+    );
   }  
 
 
