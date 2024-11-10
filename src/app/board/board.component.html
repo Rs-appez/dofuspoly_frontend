@@ -1,17 +1,15 @@
-
 <div class="board-container">
     <img src="/Board.png" alt="Board Image" class="board-image">
     <div class="dice">
         @if(diceRollsCount() > 0){
-           <img src="/dices/dice_{{diceRollsCount()}}.png" alt="dice">
+        <img src="/dices/dice_{{diceRollsCount()}}.png" alt="dice">
         }
         <button type="button" (click)="rollDice()">Roll</button>
     </div>
     <div class="players">
-        <div class="player" *ngFor="let player of players()">
-            <div class="player-name">{{player.name}}</div>
-            <!-- <div class="player-position" [style.left.px]="player.position.x" [style.top.px]="player.position.y"> -->
-                <img src="/characters/character_test.png" alt="Player Image">
-            </div>
+        <div class="player" *ngFor="let player of players()" id="player_{{player.name}}"
+            [ngStyle]="{'top.%' : player.y, 'left.%' : player.x}">
+            <img src="/characters/{{player.image}}" alt="Player Image" class="player-img">
         </div>
+    </div>
 </div>
