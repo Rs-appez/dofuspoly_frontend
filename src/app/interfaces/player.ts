@@ -7,4 +7,8 @@ export interface Player {
     inJail: boolean;
     jailTurns: number;
     cards: Card[];
+    image: string;
+    x ?: number ;
+    y ?: number;
 }
+

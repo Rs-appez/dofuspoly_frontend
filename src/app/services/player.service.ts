@@ -31,6 +31,7 @@ export class PlayerService {
         inJail: player.in_jail,
         jailTurns: player.jail_turns,
         cards: player.cards,
+        image: player.image,
       })))
     );
   }
