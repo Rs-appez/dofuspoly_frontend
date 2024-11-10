@@ -3,10 +3,15 @@
     <img src="/Board.png" alt="Board Image" class="board-image">
     <div class="dice">
         @if(diceRollsCount() > 0){
-           <img src="/dice_{{diceRollsCount()}}.png" alt="dice">
+           <img src="/dices/dice_{{diceRollsCount()}}.png" alt="dice">
         }
         <button type="button" (click)="rollDice()">Roll</button>
     </div>
+    <div class="players">
+        <div class="player" *ngFor="let player of players()">
+            <div class="player-name">{{player.name}}</div>
+            <!-- <div class="player-position" [style.left.px]="player.position.x" [style.top.px]="player.position.y"> -->
+                <img src="/characters/character_test.png" alt="Player Image">
+            </div>
+        </div>
 </div>
-
-<p *ngFor=" let player of players()  "> {{player.name}}</p>
