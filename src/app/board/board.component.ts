@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   inject,
-  OnInit,
   Signal,
   signal,
   effect,
@@ -55,7 +54,7 @@ export class BoardComponent {
       });
     }
   }
-  
+
   placePlayer(player: Player) {
     let x: number | undefined, y: number | undefined;
     let offset: number = this.players()?.indexOf(player) ?? 0;
