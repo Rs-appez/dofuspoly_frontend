@@ -24,7 +24,7 @@ export class PlayerService {
   getPlayers(): Observable<Player[]> {
     return this.http.get<{ results: any[] }>(this.url, { headers: this.headers }).pipe(
       map(data => data.results.map((player: any) => ({
-        name: player.user.username,
+        name: player.user,
         position: player.position,
         money: player.money,
         inJail: player.in_jail,
