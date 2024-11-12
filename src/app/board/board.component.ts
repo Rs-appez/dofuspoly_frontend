@@ -7,8 +7,10 @@ import {
   effect,
 } from '@angular/core';
 import { Player } from '../interfaces/player';
+import { Game } from '../interfaces/game';
 import { PlayerService } from '../services/player.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { GameService } from '../services/game.service';
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -19,6 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class BoardComponent {
   diceRollsCount = signal<number>(0);
   players: Signal<Player[] | undefined> = signal<Player[]>([]);
+  game : Signal<Game | undefined> = signal<Game | undefined>(undefined);
 
   boardPosition: { [key: string]: { x: number; y: number } } = {
     start: { x: 87.5677, y: 91.1008 },
@@ -33,9 +36,12 @@ export class BoardComponent {
   };
 
   playerService: PlayerService = inject(PlayerService);
+  gameService: GameService = inject(GameService);
 
   constructor() {
     this.players = toSignal(this.playerService.getPlayers());
+    this.game = toSignal(this.gameService.getGame(1));
+
 
     // Create an effect that triggers placeAllPlayers whenever players is updated
     effect(() => {
