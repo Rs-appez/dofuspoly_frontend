@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  Signal,
-  signal,
-  effect,
-} from '@angular/core';
+import { Component, inject, effect, WritableSignal } from '@angular/core';
 import { Player } from '../../interfaces/player';
 import { Game } from '../../interfaces/game';
 import { PlayerService } from '../../services/player.service';
@@ -19,9 +13,8 @@ import { GameService } from '../../services/game.service';
   styleUrl: './board.component.css',
 })
 export class BoardComponent {
-  diceRollsCount = signal<number>(0);
-  players: Signal<Player[] | undefined> = signal<Player[]>([]);
-  game : Signal<Game | undefined> = signal<Game | undefined>(undefined);
+  diceRollsCount;
+  game: WritableSignal<Game>;
 
   boardPosition: { [key: string]: { x: number; y: number } } = {
     start: { x: 87.5677, y: 91.1008 },
@@ -39,31 +32,26 @@ export class BoardComponent {
   gameService: GameService = inject(GameService);
 
   constructor() {
-    this.players = toSignal(this.playerService.getPlayers());
     this.game = this.gameService.getGame(1);
-
+    this.diceRollsCount = this.gameService.diceRollsCount;
 
     // Create an effect that triggers placeAllPlayers whenever players is updated
     effect(() => {
-      const players = this.players();
-      if (players) {
-        this.placeAllPlayers();
-      }
+      const players = this.game().players;
+      this.placeAllPlayers();
     });
   }
 
   placeAllPlayers() {
-    const players = this.players();
-    if (players) {
-      players.forEach((player) => {
-        this.placePlayer(player);
-      });
-    }
+    const players = this.game().players;
+    players.forEach((player) => {
+      this.placePlayer(player);
+    });
   }
 
   placePlayer(player: Player) {
     let x: number | undefined, y: number | undefined;
-    let offset: number = this.players()?.indexOf(player) ?? 0;
+    let offset: number = this.game().players.indexOf(player) ?? 0;
 
     if ([1, 11, 21, 31].includes(player.position)) {
       switch (player.position) {
@@ -106,15 +94,41 @@ export class BoardComponent {
   }
 
   rollDice() {
-    this.diceRollsCount.set(Math.floor(Math.random() * 6) + 1);
-    const players = this.players();
-    if (players && players.length > 0) {
-      players[0].position += this.diceRollsCount();
-      players[0].position %= 40;
+    const diceRoll = Math.floor(Math.random() * 6) + 1;
+    this.diceRollsCount.set(diceRoll);
+
+    this.movePlayer();
+  }
+
+  movePlayer() {
+    const game = this.game();
+    const { players, current_player } = game;
+    const player = players.find(
+      (player) => player.user === current_player.user
+    );
+
+    if (player) {
+      const playerIndex = players.indexOf(player);
+      const updatedPlayers = players.map((p, i) => {
+        if (i === playerIndex) {
+          return {
+            ...p,
+            position: (p.position + this.diceRollsCount()) % 40,
+          };
+        }
+        return p;
+      });
+
+      const nextPlayerIndex = (playerIndex + 1) % players.length;
+      const updatedGame = {
+        ...game,
+        players: updatedPlayers,
+        current_player: players[nextPlayerIndex],
+      };
+
+      this.game.update(() => updatedGame);
     }
-    // this.players().forEach((player) => {
-    //   player.position += this.diceRollsCount();
-    // });
+
     this.placeAllPlayers();
   }
 }

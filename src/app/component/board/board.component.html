@@ -1,8 +1,9 @@
+@if (
+game() !== undefined
+) {
 <div>
-    @if (
-    game() !== undefined
-    ) {<p>Current Player : {{game()?.current_player?.user}}</p>}
-
+    <p>Current Player : {{game().current_player.user}}</p>
+    <p>Dice roll {{diceRollsCount()}}</p>
 </div>
 
 <div class="board-container">
@@ -14,9 +15,11 @@
         <button type="button" (click)="rollDice()">Roll</button>
     </div>
     <div class="players">
-        <div class="player" *ngFor="let player of players()" id="player_{{player.user}}"
+        <div class="player" *ngFor="let player of game()!.players" id="player_{{player.user}}"
             [ngStyle]="{'top.%' : player.y, 'left.%' : player.x}">
             <img src="/characters/{{player.image}}" alt="Player Image" class="player-img">
         </div>
     </div>
 </div>
+
+}

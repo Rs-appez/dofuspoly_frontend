@@ -1,19 +1,28 @@
-import { Injectable, signal, Signal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Game } from '../interfaces/game';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameService {
+  constructor(private http: HttpClient) {
+    this._game = signal<Game>(this.defaultGame);
+  }
 
-  constructor(private http: HttpClient) { }
+  defaultGame: Game = {
+    id: 0,
+    players: [],
+    board: { cases: [] },
+    turn: 0,
+    finished: false,
+    current_player: { user: '', position: 0, money: 0, in_jail: false, jail_turns: 0, cards: [], image: '' },
+  };
 
-  private _game : Signal<Game | undefined> = signal<Game | undefined>(undefined);
-
+  private _game: WritableSignal<Game> ;
+  diceRollsCount = signal<number>(0);
+  
   private url = `${environment.apiUrl}game/`;
   private apiKey = environment.apiKey;
 
@@ -22,15 +31,22 @@ export class GameService {
     'Content-Type': 'application/json',
   });
 
-  getGame(id : number) : Signal<Game | undefined>  {
-    if (this._game() === undefined || this._game()!.id !== id) {
-      this._game = signal<Game | undefined>(undefined);
+  getGame(id: number): WritableSignal<Game>{
+    if (this._game().id !== id) {
       this.fetchGame(id);
     }
-    return this._game; ;
+    return this._game ; 
   }
 
   fetchGame(id: number) {
-    this._game = toSignal(this.http.get<Game>(this.url + id +"/", { headers: this.headers }));
+      this.http.get<Game>(`${this.url}${id}/`, { headers: this.headers }).subscribe({
+        next: (game) => {
+          this._game.set(game);
+        },
+        error: (error) => {
+          console.error('Error fetching game:', error);
+        },
+      }
+    );
   }
 }
