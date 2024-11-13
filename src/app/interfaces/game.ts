@@ -6,5 +6,5 @@ export interface Game {
   players: Player[];
   turn: number;
   finished: boolean;
-  currentPlayer: Player;
+  current_player: Player;
 }

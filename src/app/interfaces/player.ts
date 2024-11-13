@@ -1,11 +1,11 @@
 import { Card } from "./card";
 
 export interface Player {
-    name: string;
+    user: string;
     position: number;
     money: number;
-    inJail: boolean;
-    jailTurns: number;
+    in_jail: boolean;
+    jail_turns: number;
     cards: Card[];
     image: string;
     x ?: number ;
