@@ -6,11 +6,11 @@ import {
   signal,
   effect,
 } from '@angular/core';
-import { Player } from '../interfaces/player';
-import { Game } from '../interfaces/game';
-import { PlayerService } from '../services/player.service';
+import { Player } from '../../interfaces/player';
+import { Game } from '../../interfaces/game';
+import { PlayerService } from '../../services/player.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { GameService } from '../services/game.service';
+import { GameService } from '../../services/game.service';
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -40,7 +40,7 @@ export class BoardComponent {
 
   constructor() {
     this.players = toSignal(this.playerService.getPlayers());
-    this.game = toSignal(this.gameService.getGame(1));
+    this.game = this.gameService.getGame(1);
 
 
     // Create an effect that triggers placeAllPlayers whenever players is updated
