@@ -20,3 +20,12 @@
   align-items: center; /* Center elements vertically */
   justify-content: center; /* Center elements horizontally */
 }
+
+.player {
+  position: absolute;
+  display: flex;
+  }
+
+.player-img {
+  height: 5vh;
+}

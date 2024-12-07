@@ -1,0 +1,10 @@
+<div>
+    @if (
+    game() !== undefined
+    ) {<p>Current Player : {{game().current_player.user}}</p>}
+    <p>Dice roll {{diceRollsCount()}}</p>
+
+</div>
+<div class="container">
+    <app-board class="board"></app-board>
+</div>
